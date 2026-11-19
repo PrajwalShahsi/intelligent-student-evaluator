@@ -1,0 +1,105 @@
+
+          INTELLIGENT STUDENT ASSIGNMENT EVALUATION ASSISTANT
+
+	    MINI HACKATHON PROJECT REPORT & SPECIFICATION
+
+1. TEAM & PARTICIPANT INFORMATION
+- Team Name:        Invincible
+- Team Number:      9
+- Project Title:    Intelligent Student Assignment Evaluation Assistant
+- Live Cloud App:   https://intelligent-student-evaluator-invincible.streamlit.app/
+
+Team Members & SRN Details:
+1. Prajwal S         - SRN: PES1PG25CA154
+2. Karan Shetty      - SRN: PES1PG25CA101
+3. Prarthana Winslow - SRN: PES1PG25CA159
+
+
+2. PROJECT OVERVIEW & PROBLEM STATEMENT
+
+Evaluating student assignments manually is labor-intensive and error-prone, 
+especially when evaluating large batches of questions with multiple expected 
+concepts. This prototype provides an automated AI-assisted evaluation assistant 
+combining Computer Vision (EasyOCR) and Natural Language Processing (NLP).
+
+Key Capabilities:
+- Pure Pixel-to-Text OCR: Reads student answer-sheet images directly from pixels.
+  Extracts Student ID, Question ID, Question, and Student Answer without data leakage.
+- Question Identification: Automatically maps extracted question ID (e.g., Q1) 
+  and retrieves reference answers and maximum marks from questions.csv.
+- NLP Preprocessing: Lowercasing, punctuation cleaning, acronym expansion 
+  (AI/Al <-> artificial intelligence, NLP <-> natural language processing, 
+  CNN <-> convolutional neural network), tokenization, and lemmatization.
+- Hybrid Evaluation Engine:
+  * TF-IDF Cosine Similarity (ngram_range=(1,2))
+  * Dense Semantic Cosine Similarity (all-MiniLM-L6-v2)
+  * Clause-level and sliding-window rubric concept matching against marking_rubric.csv
+  * Relevance Gating to filter out completely off-topic or irrelevant answers.
+- Constructive Feedback Generation: Lists covered and missing concepts, generating 
+  targeted suggestions for answer improvement.
+- Faculty Supervision: Interactive override panel for preliminary marks and remarks, 
+  with one-click JSON and Markdown report export.
+
+
+3. COMPONENT-BY-COMPONENT ARCHITECTUREPipeline Flow:
+[Answer Image] 
+      ↓
+[EasyOCR Engine] (detail=1 bounding boxes, vertical line clustering, horizontal sort)
+      ↓
+[Text Parser] (Student ID normalization, Question ID extraction & recovery fallback)
+      ↓
+[Reference Retrieval] (Faculty reference answers & max marks from questions.csv)
+      ↓
+[NLP Preprocessing] (Stopword removal, acronym expansion, lemmatization)
+      ↓
+[Answer Comparison] (TF-IDF Cosine Sim + all-MiniLM-L6-v2 Semantic Cosine Sim)
+      ↓
+[Rubric Evaluation] (Clause-level concept matching, RapidFuzz typo tolerance)
+      ↓
+[Marks Calculation] (Capped strictly at Rubric Weights & Max Marks)
+      ↓
+[Feedback Engine] (Covered/Missing concepts & natural improvement suggestions)
+      ↓
+[Faculty Supervision & UI] (Streamlit 3-tab executive interface)
+
+4. OFFLINE BENCHMARK & VALIDATION RESULTS (24 SAMPLES)
+
+Evaluated across all 24 answer-sheet images against ground truth:
+
+OCR Accuracy Metrics:
+- Student ID Accuracy:       100.00% (24 / 24 correct)
+- Question ID Accuracy:      100.00% (24 / 24 correct)
+- Mean Text Similarity:      98.77%
+- Character Error Rate (CER): 0.0199 (< 2.0%)
+- Word Error Rate (WER):     0.1193
+
+Grading Accuracy Metrics:
+- Within +/- 1.0 Mark:       100.00% (24 / 24 within 1 mark)
+- Within +/- 0.5 Mark:       62.50%
+- Exact Mark Agreement:      62.50%
+- Mean Absolute Error (MAE): 0.375 marks
+- Root Mean Squared Error:   0.612 marks
+- Pearson Correlation (r):   0.9526
+
+Latency & Performance:
+- Mean OCR Inference:        ~4.4 seconds per image on CPU
+- Mean Total Pipeline Time:  ~5.3 seconds per image on CPU
+
+
+5. DEPLOYMENT & REPRODUCTION INSTRUCTIONS
+
+Local Execution:
+1. Activate virtual environment:
+   .\.venv\Scripts\Activate.ps1
+2. Run benchmark:
+   python validate_pipeline.py
+3. Launch Streamlit web app:
+   streamlit run app.py
+
+Cloud Deployment:
+- Deployed on Streamlit Community Cloud:
+  https://intelligent-student-evaluator-invincible.streamlit.app/
+- Configured with packages.txt (libgl1, libglib2.0-0) and .streamlit/config.toml 
+  (fileWatcherType = "none").
+
+
