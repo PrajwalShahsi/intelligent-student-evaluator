@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "team_name": "Invincible",
+    "team_number": "9",
+    "participants": "Prajwal S(PES1PG25CA154), Karan Shetty(PES1PG25CA101), Prarthana Winslow(PES1PG25CA159)",
+    "project_title": "Intelligent Student Assignment Evaluation Assistant",
+    "evaluated_samples": 24,
+    "total_benchmark_time_seconds": 128.03,
+    "timestamp": "2026-11-19 12:45:14"
+  },
+  "ocr_metrics": {
+    "student_id_exact_accuracy_pct": 100.0,
+    "student_id_correct_count": 24,
+    "question_id_exact_accuracy_pct": 100.0,
+    "question_id_correct_count": 24,
+    "mean_text_similarity_ratio": 98.77,
+    "mean_cer": 0.0199,
+    "mean_wer": 0.1193,
+    "mean_ocr_latency_sec": 4.492
+  },
+  "grading_metrics": {
+    "mae": 0.375,
+    "rmse": 0.612,
+    "exact_mark_match_pct": 62.5,
+    "within_half_mark_pct": 62.5,
+    "within_one_mark_pct": 100.0,
+    "pearson_correlation": 0.9526,
+    "mean_total_latency_sec": 5.334
+  }
+}
